@@ -96,6 +96,13 @@ def home():
 def evaluate():
     # parse JSON payload coming from client
     input_data = request.get_json()
+    # validate that critical fields are not empty
+    required = ['Gender','Age','History','Patient','TakeMedication','Severity',
+                'BreathShortness','VisualChanges','NoseBleeding','Systolic','Diastolic',
+                'ControlledDiet','Whendiagnoused']
+    missing = [k for k in required if not input_data.get(k)]
+    if missing:
+        return jsonify({'error': 'Missing input fields', 'fields': missing}), 400
     df_row = pd.DataFrame([input_data])
     raw_pred = model.predict(df_row)[0]
     pred_stage = label_encoder.inverse_transform([raw_pred])[0]

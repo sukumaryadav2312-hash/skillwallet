@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Hypertension Detection</title>
+    <style>
+        body {margin:0;font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background:#6a11cb; /* purple gradient */
+              background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%); color:#333;}
+        header {padding:20px; text-align:center; color:#fff;}
+        h1 {margin:0; font-size:2.5em;}
+        .wrapper {display:flex; justify-content:center; padding:20px;}
+        .form-container {background:#fff; border-radius:8px; padding:30px; width:700px; box-shadow:0 5px 15px rgba(0,0,0,0.2);}
+        .form-row {display:flex; gap:15px; flex-wrap:wrap;}
+        .field {flex:1 1 45%; margin-bottom:15px;}
+        label {display:block; font-weight:600; margin-bottom:5px;}
+        select,input {width:100%; padding:8px; border:1px solid #ccc; border-radius:4px;}
+        button {width:100%; padding:12px; background:#ff416c; border:none; color:#fff; font-size:18px; border-radius:5px; cursor:pointer;}
+        button:hover {background:#ff4b2b;}
+        .result {margin-top:20px; padding:15px; background:#f0f4f8; border-left:5px solid #2575fc;}
+        .sidebar {position:absolute; right:20px; top:120px; width:200px; background:#fff; padding:15px; border-radius:8px; box-shadow:0 5px 15px rgba(0,0,0,0.1);}
+        .sidebar h3{margin-top:0; color:#2575fc;}
+    </style>
+</head>
+<body>
+<header>
+    <h1>Hypertension Detection</h1>
+    <p>AI‑Powered Cardiovascular Risk Assessment</p>
+</header>
+<div class="wrapper">
+    <div class="form-container">
+        <form id="riskForm">
+            <div class="form-row">
+                <div class="field"><label for="gender">Gender</label><select id="gender" name="Gender"><option value="">Select Gender</option><option>Male</option><option>Female</option></select></div>
+                <div class="field"><label for="age">Age Group</label><select id="age" name="Age"><option value="">Select Age Range</option><option>18-34</option><option>35-50</option><option>51-64</option><option>65+</option></select></div>
+                <div class="field"><label for="history">Family History of Hypertension</label><select id="history" name="History"><option value="">Select Option</option><option>Yes</option><option>No</option></select></div>
+                <div class="field"><label for="care">Currently Under Medical Care</label><select id="care" name="Patient"><option value="">Select Option</option><option>Yes</option><option>No</option></select></div>
+                <div class="field"><label for="med">Currently Taking BP Medication</label><select id="med" name="TakeMedication"><option value="">Select Option</option><option>Yes</option><option>No</option></select></div>
+                <div class="field"><label for="severity">Symptom Severity</label><select id="severity" name="Severity"><option value="">Select Severity</option><option>Mild</option><option>Moderate</option><option>Severe</option></select></div>
+                <div class="field"><label for="breath">Shortness of Breath</label><select id="breath" name="BreathShortness"><option value="">Select Option</option><option>Yes</option><option>No</option></select></div>
+                <div class="field"><label for="vision">Vision Changes</label><select id="vision" name="VisualChanges"><option value="">Select Option</option><option>Yes</option><option>No</option></select></div>
+                <div class="field"><label for="nose">Frequent Nosebleeds</label><select id="nose" name="NoseBleeding"><option value="">Select Option</option><option>Yes</option><option>No</option></select></div>
+                <div class="field"><label for="time">Time Since Diagnosis</label><select id="time" name="Whendiagnoused"><option value="">Select Time Period</option><option>Less than 1 Year</option><option>1-3 Years</option><option>Over 3 Years</option></select></div>
+                <div class="field"><label for="sys">Systolic Pressure</label><select id="sys" name="Systolic"><option value="">Select Range</option><option>90 - 100</option><option>101 - 110</option><option>111 - 120</option><option>121 - 130</option><option>131 - 140</option><option>141 - 150</option><option>151 - 160</option></select></div>
+                <div class="field"><label for="dia">Diastolic Pressure</label><select id="dia" name="Diastolic"><option value="">Select Range</option><option>51 - 60</option><option>61 - 70</option><option>70 - 80</option><option>81 - 90</option><option>91 - 100</option></select></div>
+                <div class="field"><label for="diet">Heart-Healthy Diet</label><select id="diet" name="ControlledDiet"><option value="">Select Option</option><option>Yes</option><option>No</option></select></div>
+            </div>
+            <p style="text-align:center;"><button type="button" onclick="submitForm()">Generate Risk Assessment</button></p>
+        </form>
+        <div id="output" class="result"></div>
+    </div>
+    <div class="sidebar">
+        <h3>BP Guidelines</h3>
+        <ul>
+            <li>Normal: &lt;120/80</li>
+            <li>Elevated: 120-129/&lt;80</li>
+            <li>Stage 1: 130-139/80-89</li>
+            <li>Stage 2: ≥140/90</li>
+            <li>Crisis: &gt;180/&gt;120</li>
+        </ul>
+    </div>
+</div>
+<script>
+function submitForm(){
+    const form = document.getElementById('riskForm');
+    const data = {};
+    new FormData(form).forEach((v,k)=> data[k]=v);
+    fetch('/evaluate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)})
+    .then(r=>r.json()).then(res=>{
+        document.getElementById('output').innerHTML =
+            `<h3>Prediction: ${res.stage} (Risk ${res.risk}%)</h3>` +
+            `<p>Urgency: ${res.urgency}</p><ul>` +
+            Object.entries(res.probs).map(([k,v])=>`<li>${k}: ${v}</li>`).join('') +
+            `</ul>`;
+    });
+}
+</script>
+</body>
+</html>

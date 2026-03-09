@@ -1,0 +1,41 @@
+{
+  "model_name": "Logistic Regression",
+  "features": [
+    "Age",
+    "History",
+    "Patient",
+    "TakeMedication",
+    "Severity",
+    "BreathShortness",
+    "VisualChanges",
+    "NoseBleeding",
+    "Whendiagnoused",
+    "Systolic",
+    "Diastolic",
+    "ControlledDiet"
+  ],
+  "numerical_features": [],
+  "categorical_features": [
+    "Age",
+    "History",
+    "Patient",
+    "TakeMedication",
+    "Severity",
+    "BreathShortness",
+    "VisualChanges",
+    "NoseBleeding",
+    "Whendiagnoused",
+    "Systolic",
+    "Diastolic",
+    "ControlledDiet"
+  ],
+  "class_names": [
+    "HYPERTENSION (Stage-1)",
+    "HYPERTENSION (Stage-2)",
+    "HYPERTENSIVE CRISIS",
+    "NORMAL"
+  ],
+  "accuracy": 1.0,
+  "f1_score": 1.0,
+  "cv_accuracy": 1.0
+}
